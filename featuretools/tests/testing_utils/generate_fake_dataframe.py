@@ -2,9 +2,10 @@ import random
 from datetime import datetime as dt
 
 import pandas as pd
-import pytest
 import woodwork.type_sys.type_system as ww_type_system
 from woodwork import logical_types
+
+from featuretools.feature_discovery.utils import flatten_list
 
 logical_type_mapping = {
     logical_types.Boolean.__name__: [True, False],
@@ -32,18 +33,11 @@ logical_type_mapping = {
 }
 
 
-def flatten_list(nested_list):
-    return [item for sublist in nested_list for item in sublist]
-
-
 def generate_fake_dataframe(
     col_defs=[("f_1", "Numeric"), ("f_2", "Datetime", "time_index")],
     n_rows=10,
     df_name="df",
 ):
-    dask = pytest.importorskip("dask", reason="Dask not installed, skipping")
-    dask.config.set({"dataframe.convert-string": False})
-
     def randomize(values_):
         random.seed(10)
         values = values_.copy()
